@@ -11,7 +11,8 @@
     <div id="title-screen" class="screen active">
         <div class="title-container">
             <h1 class="game-title">FIGHTBOT<br><span class="subtitle">ARENA</span></h1>
-            <button class="btn btn-primary pulse" onclick="showScreen('class-select')">⚔️ BATTLE</button>
+            <button class="btn btn-primary pulse" onclick="startAIBattleSetup()">⚔️ VS AI</button>
+            <button class="btn btn-secondary" onclick="startPvpSetup()">👥 LOCAL PVP</button>
             <button class="btn btn-secondary" onclick="showScreen('shop-screen')">🛒 SHOP</button>
             <button class="btn btn-secondary" onclick="showScreen('chest-screen')">📦 CHESTS</button>
             <button class="btn btn-info" onclick="showScreen('profile-screen')">👤 PROFILE</button>
@@ -47,7 +48,13 @@
     <!-- CLASS SELECT -->
     <div id="class-select" class="screen">
         <button class="back-btn" onclick="showScreen('title-screen')">← Back</button>
-        <h2>Choose Your Class</h2>
+        <h2 id="class-select-title">Choose Your Class</h2>
+        <div id="class-select-setup" class="setup-panel hidden">
+            <div class="setup-badge" id="class-select-mode-badge"></div>
+            <div class="setup-status" id="class-select-status"></div>
+            <div class="setup-summary" id="class-select-summary"></div>
+            <div class="controls-preview" id="class-select-controls"></div>
+        </div>
         <div class="class-grid">
             <div class="class-card" onclick="selectClass('assassin')">
                 <div class="class-icon">🗡️</div>
@@ -79,7 +86,13 @@
     <!-- WEAPON SELECT -->
     <div id="weapon-select" class="screen">
         <button class="back-btn" onclick="showScreen('class-select')">← Back</button>
-        <h2>Choose Your Weapon</h2>
+        <h2 id="weapon-select-title">Choose Your Weapon</h2>
+        <div id="weapon-select-setup" class="setup-panel hidden">
+            <div class="setup-badge" id="weapon-select-mode-badge"></div>
+            <div class="setup-status" id="weapon-select-status"></div>
+            <div class="setup-summary" id="weapon-select-summary"></div>
+            <div class="controls-preview" id="weapon-select-controls"></div>
+        </div>
         <div id="weapon-grid" class="class-grid"></div>
     </div>
 
@@ -119,15 +132,29 @@
         </div>
 
         <div class="arena" id="arena">
-            <canvas id="game-canvas" width="800" height="400"></canvas>
+            <canvas id="game-canvas"></canvas>
             <div id="damage-numbers"></div>
         </div>
 
         <div class="combat-log" id="combat-log"></div>
 
-        <div class="ability-bar" id="ability-bar"></div>
-
-        <div class="item-bar" id="item-bar"></div>
+        <div class="ability-bar" id="ability-bar">
+            <div class="ability-group">
+                <div class="ability-group-header">
+                    <div class="ability-group-name" id="player-ability-name">Player 1</div>
+                    <div class="ability-group-controls" id="player-ability-controls">Move A / D • Skills Q / W / E / R / T</div>
+                </div>
+                <div class="ability-list" id="player-ability-list"></div>
+            </div>
+            <div class="ability-group hidden" id="enemy-ability-group">
+                <div class="ability-group-header enemy-group-header">
+                    <div class="ability-group-name" id="enemy-ability-name">Player 2</div>
+                    <div class="ability-group-controls" id="enemy-ability-controls">Move ← / → • Skills U / I / O / P / [</div>
+                </div>
+                <div class="ability-list enemy-ability-list" id="enemy-ability-list"></div>
+            </div>
+            <div class="item-bar" id="item-bar"></div>
+        </div>
     </div>
 
     <!-- RESULTS SCREEN -->
