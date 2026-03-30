@@ -594,7 +594,13 @@ function startCombatLoop() {
         gameState.time--;
         document.getElementById('battle-timer').textContent =
             `${Math.floor(gameState.time / 60)}:${(gameState.time % 60).toString().padStart(2, '0')}`;
-        if (gameState.time <= 0) endBattle(gameState.player.hp > gameState.enemy.hp);
+        if (gameState.time <= 0) {
+            if (gameState.mode === 'pvp' && gameState.player.hp === gameState.enemy.hp) {
+                endBattle(false, true);
+                return;
+            }
+            endBattle(gameState.player.hp > gameState.enemy.hp);
+        }
     }, 1000);
 
     effectsInterval = setInterval(() => {
@@ -906,7 +912,18 @@ function useAbilityForFighter(fighterKey, index) {
     if (attacker.cantAttack) { logMsg(`${fighterLabel(attacker)} can't attack!`, 'info'); return; }
 
     if (index === 0) {
-        performAttack(attacker, defender, attacker.weaponData.baseAbility);
+        const baseAbility = attacker.weaponData.baseAbility;
+        if (attacker.cooldowns.base > 0) {
+            logMsg(`${fighterLabel(attacker)} ${baseAbility.name}: ${attacker.cooldowns.base}s cooldown`, 'info');
+            return;
+        }
+        if (baseAbility.cooldown) {
+            attacker.cooldowns.base = baseAbility.cooldown;
+            startCooldown(attacker, 'base', baseAbility.cooldown);
+        }
+        performAttack(attacker, defender, baseAbility);
+        updateHUD();
+        updateAbilityBar();
         return;
     }
 
@@ -935,6 +952,7 @@ function useAbilityForFighter(fighterKey, index) {
         }, delay);
 
         logMsg(`${fighterLabel(attacker)} SUPER: ${s.name}!`, 'info');
+        updateHUD();
         updateAbilityBar();
         return;
     }
@@ -952,6 +970,7 @@ function useAbilityForFighter(fighterKey, index) {
     startCooldown(attacker, cdKey, ability.cooldown);
     performAttack(attacker, defender, ability);
     logMsg(`${fighterLabel(attacker)} used ${ability.name}!`, 'info');
+    updateHUD();
     updateAbilityBar();
 }
 
@@ -969,6 +988,8 @@ function aiTurn() {
     if (!gameState || gameState.over) return;
     const ai = gameState.enemy, player = gameState.player;
     if (ai.cantAttack) return;
+    const baseAbility = ai.weaponData.baseAbility;
+    const baseReady = !ai.cooldowns.base || ai.cooldowns.base <= 0;
 
     const available = [];
     ai.weaponData.abilities.forEach((a, i) => {
@@ -980,7 +1001,7 @@ function aiTurn() {
     if ((!ai.cooldowns['super'] || ai.cooldowns['super'] <= 0) && ai.energy >= superA.energy && !ai.abilityBlocked)
         available.push({ ability: superA, index: 'super' });
 
-    if (available.length > 0 && Math.random() < 0.4) {
+    if (available.length > 0 && (Math.random() < 0.4 || !baseReady)) {
         const chosen = available[Math.floor(Math.random() * available.length)];
         ai.energy -= chosen.ability.energy;
 
@@ -1004,8 +1025,12 @@ function aiTurn() {
             startCooldown(ai, cdKey, chosen.ability.cooldown);
             performAttack(ai, player, chosen.ability);
         }
-    } else {
-        performAttack(ai, player, ai.weaponData.baseAbility);
+    } else if (baseReady) {
+        if (baseAbility.cooldown) {
+            ai.cooldowns.base = baseAbility.cooldown;
+            startCooldown(ai, 'base', baseAbility.cooldown);
+        }
+        performAttack(ai, player, baseAbility);
     }
 
     // AI movement toward player
@@ -1082,14 +1107,18 @@ function useItem(itemId) {
 }
 
 // ============ END BATTLE ============
-function endBattle(playerWon) {
+function endBattle(playerWon, isDraw = false) {
     if (gameState.over) return;
     gameState.over = true;
     stopCombat();
 
     const panel = document.getElementById('results-content');
     let html = '';
-    if (gameState.mode === 'pvp') {
+    if (isDraw && gameState.mode === 'pvp') {
+        html = `<h2 class="win-text">DRAW</h2>
+            <div class="reward-line">Both fighters were still standing when time ran out.</div>
+            <div class="reward-line">RP, XP, coins, chests, and items were unchanged.</div>`;
+    } else if (gameState.mode === 'pvp') {
         const winner = playerWon ? gameState.player : gameState.enemy;
         html = `<h2 class="win-text">${fighterLabel(winner).toUpperCase()} WINS!</h2>
             <div class="reward-line">Local PvP match complete.</div>
@@ -1211,7 +1240,7 @@ function renderAbilityButtons(containerId, fighter, fighterKey) {
         const btn = document.createElement('div');
         btn.className = 'ability-btn';
         if (i === 4) btn.classList.add('super-btn');
-        const cdKey = i === 0 ? null : i === 4 ? 'super' : `ability_${i - 1}`;
+        const cdKey = i === 0 ? 'base' : i === 4 ? 'super' : `ability_${i - 1}`;
         const cd = cdKey ? (fighter.cooldowns[cdKey] || 0) : 0;
         const cost = i === 0 ? 0 : (a.energy || 0);
 

@@ -24,7 +24,7 @@ const WEAPONS = {
     dagger: {
         name: 'Dagger', icon: '🗡️',
         desc: 'Fast melee strikes with teleportation',
-        baseAbility: { name: 'Slice', damage: 20, icon: '🗡️', desc: 'Slice with dagger' },
+        baseAbility: { name: 'Slice', damage: 20, icon: '🗡️', cooldown: 1, desc: 'Slice with dagger' },
         abilities: [
             { name: 'Teleport', icon: '💨', damage: 0, energy: 50, cooldown: 10, desc: 'Teleport 5 blocks ahead', special: 'teleport' },
             { name: 'Wolverine Daggers', icon: '🔪', damage: 60, energy: 70, cooldown: 15, desc: 'Throw 6 daggers (10 dmg each)', hits: 6, hitDmg: 10 },
@@ -34,7 +34,7 @@ const WEAPONS = {
     dual_swords: {
         name: 'Dual Swords', icon: '⚔️',
         desc: 'Twin blades with shockwave power',
-        baseAbility: { name: 'Swing Sword', damage: 20, icon: '⚔️', desc: 'Swing dual swords' },
+        baseAbility: { name: 'Swing Sword', damage: 20, icon: '⚔️', cooldown: 1, desc: 'Swing dual swords' },
         abilities: [
             { name: 'Sword Spin', icon: '🌀', damage: 60, energy: 80, cooldown: 5, desc: 'Spin 3x, 20 dmg per turn', hits: 3, hitDmg: 20 },
             { name: 'Shuriken Throw', icon: '✦', damage: 40, energy: 80, cooldown: 10, desc: 'Throw 2 shurikens, 20 dmg each', hits: 2, hitDmg: 20 },
@@ -44,7 +44,7 @@ const WEAPONS = {
     bow: {
         name: 'Bow & Arrow', icon: '🏹',
         desc: 'Ranged attacks with burning arrows',
-        baseAbility: { name: 'Fire Arrow', damage: 5, icon: '🏹', desc: 'Fire arrow, burn 20s', effects: [{ type: 'burning', duration: 20 }] },
+        baseAbility: { name: 'Fire Arrow', damage: 5, icon: '🏹', cooldown: 2, desc: 'Fire arrow, burn 20s', effects: [{ type: 'burning', duration: 20 }] },
         abilities: [
             { name: 'Shadow Travel', icon: '🌑', damage: 0, energy: 30, cooldown: 5, desc: 'Sink into shadow for 5s, invincible', special: 'invincible', duration: 5 },
             { name: 'Bow of Heavens', icon: '🌟', damage: 100, energy: 70, cooldown: 10, desc: 'Arrow breaks through obstacles, 100 dmg' },
@@ -55,7 +55,7 @@ const WEAPONS = {
     broadsword: {
         name: 'Broadsword', icon: '🗡️',
         desc: 'Heavy strikes with shields and lava',
-        baseAbility: { name: 'Sword Slash', damage: 25, icon: '🗡️', desc: 'Slash with broadsword' },
+        baseAbility: { name: 'Sword Slash', damage: 25, icon: '🗡️', cooldown: 1, desc: 'Slash with broadsword' },
         abilities: [
             { name: 'Shield of Shielding', icon: '🛡️', damage: 0, energy: 50, cooldown: 5, desc: 'Shield absorbs 90 damage', special: 'shield', shieldAmount: 90 },
             { name: 'Lava Strike', icon: '🌋', damage: 110, energy: 85, cooldown: 35, desc: 'Stab ground, lava area 110 dmg' },
@@ -65,7 +65,7 @@ const WEAPONS = {
     axe: {
         name: 'Axe', icon: '🪓',
         desc: 'Spinning axes with bloodthirst',
-        baseAbility: { name: 'Axe Swing', damage: 22, icon: '🪓', desc: 'Swing axe' },
+        baseAbility: { name: 'Axe Swing', damage: 22, icon: '🪓', cooldown: 1, desc: 'Swing axe' },
         abilities: [
             { name: 'Axe Spin', icon: '🌀', damage: 50, energy: 60, cooldown: 6, desc: 'Spin 4 times, 50 total dmg' },
             { name: 'Axe Throw', icon: '🪃', damage: 30, energy: 20, cooldown: 5, desc: 'Boomerang axe, 30 dmg' },
@@ -75,7 +75,7 @@ const WEAPONS = {
     spear: {
         name: 'Spear', icon: '🔱',
         desc: 'Long range thrusts with Valkyrie mount',
-        baseAbility: { name: 'Throw Spear', damage: 25, icon: '🔱', desc: 'Throw spear' },
+        baseAbility: { name: 'Throw Spear', damage: 25, icon: '🔱', cooldown: 1, desc: 'Throw spear' },
         abilities: [
             { name: 'Spear YEET', icon: '💫', damage: 100, energy: 70, cooldown: 4, desc: 'Throw spear, 100 dmg + 1s stun', effects: [{ type: 'stun', duration: 1 }] },
             { name: 'Valkyrie', icon: '🐴', damage: 0, energy: 20, cooldown: 10, desc: 'Summon flying horse for 10s', special: 'valkyrie', duration: 10 },
@@ -86,7 +86,7 @@ const WEAPONS = {
     fire: {
         name: 'Fire', icon: '🔥',
         desc: 'Burn everything with flames and dragons',
-        baseAbility: { name: 'Shoot Fire', damage: 10, icon: '🔥', desc: 'Shoot fire' },
+        baseAbility: { name: 'Shoot Fire', damage: 10, icon: '🔥', cooldown: 1, desc: 'Shoot fire' },
         abilities: [
             { name: 'Fireball', icon: '☄️', damage: 85, energy: 70, cooldown: 15, desc: '85 dmg + 50s burn', effects: [{ type: 'burning', duration: 50 }] },
             { name: 'Wall of Fire', icon: '🧱', damage: 0, energy: 100, cooldown: 35, desc: '30% dmg shield for 20s, touch=20 dmg', special: 'firewall', duration: 20, shieldPercent: 30 },
@@ -96,7 +96,7 @@ const WEAPONS = {
     earth: {
         name: 'Earth', icon: '🪨',
         desc: 'Rock walls and mountain power',
-        baseAbility: { name: 'Rock Shot', damage: 25, icon: '🪨', desc: 'Shoot 5 rocks, 5 dmg each', hits: 5, hitDmg: 5 },
+        baseAbility: { name: 'Rock Shot', damage: 25, icon: '🪨', cooldown: 2, desc: 'Shoot 5 rocks, 5 dmg each', hits: 5, hitDmg: 5 },
         abilities: [
             { name: 'Stone Wall', icon: '🧱', damage: 0, energy: 65, cooldown: 30, desc: '50% dmg shield 30s, cant attack', special: 'stonewall', duration: 30, shieldPercent: 50 },
             { name: 'Rock Throw', icon: '🪨', damage: 60, energy: 80, cooldown: 45, desc: '2 big rocks, 30 dmg each + earth', hits: 2, hitDmg: 30, effects: [{ type: 'earth', duration: 15 }] },
@@ -106,7 +106,7 @@ const WEAPONS = {
     ice: {
         name: 'Ice', icon: '❄️',
         desc: 'Freeze and control with blizzards',
-        baseAbility: { name: 'Ice Shard', damage: 25, icon: '❄️', desc: 'Throw ice shard' },
+        baseAbility: { name: 'Ice Shard', damage: 25, icon: '❄️', cooldown: 1, desc: 'Throw ice shard' },
         abilities: [
             { name: 'Icy Wind', icon: '🌬️', damage: 30, energy: 50, cooldown: 15, desc: '30 dmg + freeze', effects: [{ type: 'freeze', duration: 15 }] },
             { name: 'Ice Wall', icon: '🧊', damage: 0, energy: 90, cooldown: 30, desc: '80% shield but frozen, no energy regen 15s', special: 'icewall', duration: 15, shieldPercent: 80 },
@@ -117,7 +117,7 @@ const WEAPONS = {
     offense: {
         name: 'Offense', icon: '💡',
         desc: 'Holy light as a weapon',
-        baseAbility: { name: 'Light Beam', damage: 25, icon: '💡', desc: 'Beam of light' },
+        baseAbility: { name: 'Light Beam', damage: 25, icon: '💡', cooldown: 1, desc: 'Beam of light' },
         abilities: [
             { name: 'Immensity', icon: '🦍', damage: 0, energy: 70, cooldown: 40, desc: 'Grow huge, +10% dmg for 20s', special: 'dmgbuff', duration: 20, buffPercent: 10 },
             { name: 'Godly Strike', icon: '⚡', damage: 100, energy: 150, cooldown: 45, desc: 'Freeze 3s then 100 dmg burst', selfEffects: [{ type: 'freeze', duration: 3 }] },
@@ -127,7 +127,7 @@ const WEAPONS = {
     defense: {
         name: 'Defense', icon: '🛡️',
         desc: 'Divine shields and heavenly walls',
-        baseAbility: { name: 'Mini Shield', damage: 0, icon: '🛡️', desc: 'Block 5% dmg for 2s', special: 'minishield', shieldPercent: 5, duration: 2 },
+        baseAbility: { name: 'Mini Shield', damage: 0, icon: '🛡️', cooldown: 3, desc: 'Block 5% dmg for 2s', special: 'minishield', shieldPercent: 5, duration: 2 },
         abilities: [
             { name: 'Wall of Heavens', icon: '🌥️', damage: 0, energy: 70, cooldown: 40, desc: '100 HP shield, blinding 10s on self', special: 'shield', shieldAmount: 100, selfEffects: [{ type: 'blinding', duration: 10 }] },
             { name: 'YEET', icon: '💥', damage: 100, energy: 100, cooldown: 30, desc: '100 dmg, burn+confuse+poison 20s on enemy. Confusion 10s self', effects: [{ type: 'burning', duration: 20 }, { type: 'confusion', duration: 20 }, { type: 'poison', duration: 20 }], selfEffects: [{ type: 'confusion', duration: 10 }] },
@@ -137,7 +137,7 @@ const WEAPONS = {
     stamina: {
         name: 'Stamina', icon: '💪',
         desc: 'Sustain and outlast your opponent',
-        baseAbility: { name: 'Quick Heal', damage: 0, icon: '💪', desc: 'Heal 15 HP', special: 'heal', healAmount: 15 },
+        baseAbility: { name: 'Quick Heal', damage: 0, icon: '💪', cooldown: 2, desc: 'Heal 15 HP', special: 'heal', healAmount: 15 },
         abilities: [
             { name: 'Rejuvenate', icon: '💚', damage: 0, energy: 50, cooldown: 15, desc: 'Heal 150 HP', special: 'heal', healAmount: 150 },
             { name: 'Energize', icon: '⚡', damage: 0, energy: 0, cooldown: 20, desc: 'Restore 200 energy', special: 'energize', energyAmount: 200 },
